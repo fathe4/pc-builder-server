@@ -13,6 +13,7 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wanl6.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
+  serverSelectionTimeoutMS: 160000,
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -40,6 +41,9 @@ async function run() {
       const result = await productsCollection.findOne({ _id: productId });
       res.send(result);
     });
+    app.listen(port, () => {
+      console.log(`Example app listening at http://localhost:${port}`);
+    });
   } finally {
   }
 }
@@ -47,8 +51,4 @@ run().catch(console.dir);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
 });
